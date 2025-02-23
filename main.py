@@ -16,10 +16,18 @@ class Post(BaseModel):
 
 my_post = [{"title":"title1", "content":"content1", "id":1}, {"title":"sri", "content":"my name is sriram", "id":2}]
 
+
+# function to find post
 def find_post(id):
     for p in my_post:
         if p['id'] == id:
             return p
+
+def find_post_index(id):
+    for i, p in enumerate(my_post):
+        if p['id'] == id:
+            return i
+    return None 
 
 @app.get("/")
 def root():
@@ -50,10 +58,11 @@ def get_post(id: int):
    return {"post_detail":post}
 
 
-@app.delete("/posts/{id}")
+@app.delete("/posts/{id}",status_code = status.HTTP_204_NO_CONTENT)
 def delete_post(id: int):
-    post = find_post(id)
-    if post == None:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,detail=f"post with id {id} not found")
-    my_post.remove(post)
-    return {"message":"post deleted successfully"} 
+    index = find_post_index(id)
+    if index is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id {id} not found")
+    
+    my_post.pop(index)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
