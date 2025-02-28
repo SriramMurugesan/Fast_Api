@@ -1,6 +1,7 @@
+from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy.sql.expression import null
 from .database import Base
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.sql.sqltypes import Boolean
+
 
 class Post(Base):
     __tablename__ = "posts"
