@@ -41,3 +41,17 @@ CLI & Logging
 FastAPI-CLI (0.0.7) - Provides additional FastAPI command-line tools.
 Rich (13.9.4) - For improved logging and CLI output.
 Typer (0.15.1) - A CLI toolkit used by FastAPI-CLI.
+
+explain declarative base
+declarative base- is a base class that can be inherited from to create ORM classes. It provides a base structure for the ORM classes to be built upon.
+
+The get_db() function in database.py is a dependency function that manages database sessions in your FastAPI application. Here's what it does:
+
+Creates a new database session with db = SessionLocal()
+Yields that session to be used in your FastAPI route functions
+Ensures the database session is properly closed after the request is complete (in the finally block)
+
+explain synchronize_session
+synchronize_session- is a function that synchronizes the database session with the database. It ensures that all changes made to the session are committed to the database.
+
+
