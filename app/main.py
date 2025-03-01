@@ -7,13 +7,12 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 from sqlalchemy.orm import Session
-from . import models
-from database import engine,SessionLocal,get_db
+import models
+from database import engine, SessionLocal, get_db
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
 
 
 
