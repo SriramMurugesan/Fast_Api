@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from fastapi import FastAPI, Response, status, HTTPException, Depends
 from fastapi.params import Body
 from pydantic import BaseModel
@@ -7,6 +7,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 import models, schemas
 from database import engine, SessionLocal, get_db
 
@@ -48,7 +49,7 @@ def find_post_index(id):
 def root():
     return {"message": "Hello World"}
 
-@app.get("/posts")
+@app.get("/posts",response_model=List[schemas.Post])
 def get_posts(db:Session = Depends(get_db)):
     # cursor.execute("""SELECT * FROM posts""")
     # posts = cursor.fetchall()
@@ -73,7 +74,7 @@ def get_latest_post(db:Session = Depends(get_db)):
     post = db.query(models.Post).order_by(models.Post.id.desc()).first()
     return post
 
-@app.get("/posts/{id}")
+@app.get("/posts/{id}",response_model=schemas.Post)
 def get_post(id: int,db:Session = Depends(get_db)):
     # cursor.execute("""SELECT * FROM posts WHERE id = %s""", (str(id),))
     # post = cursor.fetchone()
@@ -96,7 +97,7 @@ def delete_post(id: int,db:Session = Depends(get_db)):
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-@app.put("/posts/{id}")
+@app.put("/posts/{id}",response_model=schemas.Post)
 def update_post(id: int, updated_post: schemas.PostCreate, db:Session = Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
@@ -107,3 +108,18 @@ def update_post(id: int, updated_post: schemas.PostCreate, db:Session = Depends(
     post_query.update(updated_post.dict(), synchronize_session=False)
     db.commit()
     return  post_query.first()
+
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserResponse)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    try:
+        new_user = models.User(**user.dict())
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User with this email already exists"
+        )
