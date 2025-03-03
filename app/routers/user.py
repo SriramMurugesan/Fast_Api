@@ -11,11 +11,11 @@ router = APIRouter(
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-
-    hashed_password = utils.hash(user.password)
-    user.password = hashed_password
-  
-    new_user = models.User(**user.dict())
+    # Hash the password
+    user_data = user.dict()
+    user_data["password"] = utils.hash(user_data["password"])
+    
+    new_user = models.User(**user_data)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
