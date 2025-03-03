@@ -17,7 +17,7 @@ pip install sqlalchemy
 pip install pydantic
 pip install uvicorn
 pip install psycopg2
-pip install psycopg2-binary
+pip install passlib[bcrypt]
 
 Main FastAPI Libraries
 FastAPI (0.115.8) - The core framework for building APIs.
@@ -41,6 +41,7 @@ CLI & Logging
 FastAPI-CLI (0.0.7) - Provides additional FastAPI command-line tools.
 Rich (13.9.4) - For improved logging and CLI output.
 Typer (0.15.1) - A CLI toolkit used by FastAPI-CLI.
+Passlib (1.7.4) - For password hashing and verification.
 
 explain declarative base
 declarative base- is a base class that can be inherited from to create ORM classes. It provides a base structure for the ORM classes to be built upon.
