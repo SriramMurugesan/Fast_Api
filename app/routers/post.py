@@ -46,7 +46,7 @@ def get_post(id: int,db:Session = Depends(get_db)):
     return post
 
 
-@router.delete("/posts/{id}",status_code = status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}",status_code = status.HTTP_204_NO_CONTENT)
 def delete_post(id: int,db:Session = Depends(get_db)):
     # cursor.execute("""DELETE FROM posts WHERE id = %s RETURNING *""", (str(id),))
     # deleted_post = cursor.fetchone()
