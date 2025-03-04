@@ -9,7 +9,7 @@ router = APIRouter(
     tags=["Authentication"]
 )
 
-@router.post("/login", status_code=status.HTTP_200_OK)
+@router.post("/login", status_code=status.HTTP_200_OK, response_model=schemas.Token) 
 async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     # Log the received credentials (email only for security)
     print(f"Login attempt for email: {user_credentials.username}")
