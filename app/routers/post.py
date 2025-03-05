@@ -12,7 +12,7 @@ router = APIRouter(
 
 
 @router.get("/",response_model=List[schemas.Post])
-def get_posts(db:Session = Depends(get_db)):
+def get_posts(db:Session = Depends(get_db),current_user: models.User = Depends(get_current_user)):
     # cursor.execute("""SELECT * FROM posts""")
     # posts = cursor.fetchall()
 
@@ -35,8 +35,8 @@ def create_posts(post:schemas.PostCreate,db:Session = Depends(get_db),current_us
 
 
 @router.get("/latest",response_model=schemas.Post)
-def get_latest_post(db:Session = Depends(get_db)):
-    post = db.query(models.Post).order_by(models.Post.id.desc()).first()
+def get_latest_post(db:Session = Depends(get_db),current_user: models.User = Depends(get_current_user)):
+    post = db.query(models.Post).filter(models.Post.owner_id == current_user.id).order_by(models.Post.id.desc()).first()
     return post
 
 
