@@ -1,3 +1,4 @@
 env
 *.pyc
 learn.md
+.env

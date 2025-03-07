@@ -1,16 +1,12 @@
-from typing import Optional, List
-from fastapi import FastAPI, Response, status, HTTPException, Depends
-from fastapi.params import Body
-from pydantic import BaseModel, EmailStr
+from fastapi import FastAPI
+from app import models
+from app.database import engine
 from app.routers import post, user, auth
-from random import randrange
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import time
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
-from app import models, schemas, utils
-from app.database import engine, SessionLocal, get_db, Base
+from app.config import settings
+
+
+
+print(settings.database_username)  # Access from instance, not class
 
 
 models.Base.metadata.create_all(bind=engine)
